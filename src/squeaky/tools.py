@@ -2,13 +2,8 @@ import sys
 from pathlib import Path
 
 
-class SqueakyException(Exception):
-    pass
-
-
 def parse_args(argv):
-    """Parses sys.argv to find notebook paths and switches, otherwise gets
-    list of paths from `NB_PATHS_LIST`
+    """Parses sys.argv to find notebook paths and switches
 
     Returns a tuple with:
         - A set of switches (arguments starting with '--')
@@ -25,15 +20,6 @@ def parse_args(argv):
     for a in argv:
         if a not in switches:
             filepaths.append(a)
-
-    if filepaths == []:
-        # No files passed; read from text file
-        with open(NB_PATHS_LIST, encoding="utf-8") as f:
-            for path in f.readlines():
-                path = path.strip()
-                if path == "" or path.startswith("#"):
-                    continue
-                filepaths.append(path)
 
     # Make all paths of form ./notebook_root/folder/notebook.ipynb
     for idx, path in enumerate(filepaths):

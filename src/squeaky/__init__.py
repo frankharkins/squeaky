@@ -4,7 +4,7 @@ import subprocess
 
 from .passes.metadata import clean_metadata
 from .passes.svg import clean_svgs
-from .tools import parse_args, SqueakyException
+from .tools import parse_args
 
 
 def clean_notebooks():
