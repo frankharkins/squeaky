@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "squeaky"
+version = "0.0.1"
+authors = [
+  { name="Frank Harkins", email="frankharkins@hotmail.co.uk" },
+]
+description = "Remove noise from notebooks for cleaner version control diffs"
+readme = "README.md"
+requires-python = ">=3.7"
+license = "Apache-2.0"
+
+[project.urls]
+"Homepage" = "https://github.com/frankharkins/squeaky-nb"
+"Bug Tracker" = "https://github.com/frankharkins/squeaky-nb/issues"
+
+[project.scripts]
+squeaky = "squeaky:clean_notebooks"
