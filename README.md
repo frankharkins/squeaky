@@ -8,6 +8,7 @@ cleaner. Tools like [nbdime](https://nbdime.readthedocs.io/en/latest/) and
 install and learn. Instead, Squeaky makes notebook diffs more manageable with
 standard Git tools.
 
+
 ## Usage
 
 First, install:
@@ -23,9 +24,29 @@ squeaky path/to/notebook(s).ipynb
 ```
 
 To check notebooks without modifying them, use the `--check` flag.
+
 ```sh
 squeaky path/to/notebook.ipynb --check
 ```
+
+To use with [pre-commit](https://pre-commit.com/), add the following to your
+`.pre-commit-config.yaml`.
+
+```yaml
+repos:
+  - repo: local
+    hooks:
+      - name: Clean notebooks
+        id: clean-notebooks
+        entry: squeaky --check
+        language: python
+        files: '(.*?).ipynb$'
+```
+
+**Experimental:** To automatically fix problems on commit, replace `--check`
+with `--git-add`, but beware this can sometimes fail when committing notebooks
+with unstaged changes.
+
 
 ## Features
 
@@ -40,6 +61,7 @@ squeaky path/to/notebook.ipynb --check
   Setting code image outputs to SVGs makes images look great, but comes with
   horrendous diffs. Squeaky minifies SVG outputs to a single line, which also
   reduces file size.
+
 
 ## Contributing
 
