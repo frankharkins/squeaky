@@ -41,6 +41,21 @@ squeaky path/to/notebook.ipynb --check
   horrendous diffs. Squeaky minifies SVG outputs to a single line, which also
   reduces file size.
 
+## Contributing
+
+To install requirements and add pre-commit hooks:
+
+```sh
+pip install -r requirements-dev.txt
+pre-commit install
+```
+
+To run unit tests (also run on commit):
+
+```sh
+tox
+```
+
 ## Wishlist
 
 - **Remove empty cells**

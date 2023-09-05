@@ -52,7 +52,6 @@ class TestPasses(unittest.TestCase):
 
 
 class TestCLI(unittest.TestCase):
-    
     @patch("sys.stdout", StringIO())
     @patch("sys.argv", ["squeaky", str(dirty_tempfile_path), "--check"])
     def test_check_flag_does_not_modify(self):
