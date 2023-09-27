@@ -7,8 +7,3 @@ repos:
       language: python
       always_run: true
       exclude: '.'  # don't pass filepaths to unittest
-    - id: black
-      name: Black linting
-      entry: black
-      language: python
-      types: [python]
