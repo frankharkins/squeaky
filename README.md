@@ -4,9 +4,9 @@
 
 Squeaky removes unwanted changes to your notebooks to make your Git diffs
 cleaner. Tools like [nbdime](https://nbdime.readthedocs.io/en/latest/) and
-[ReviewNB](https://www.reviewnb.com/) are awesome, but are one extra program to
-install and learn. Instead, Squeaky makes notebook diffs more manageable with
-standard Git tools.
+[ReviewNB](https://www.reviewnb.com/) are awesome, but can be clunky and
+difficult to learn. Instead, Squeaky makes it easier to manage notebook diffs
+with standard Git tools.
 
 
 ## Usage
@@ -45,7 +45,8 @@ repos:
 
 **Experimental:** To automatically fix problems on commit, replace `--check`
 with `--git-add`, but beware this can sometimes fail when committing notebooks
-with unstaged changes.
+with unstaged changes and create a merge conflict (ironic, I know). This should
+only be a problem if you `git add --patch` a notebook.
 
 
 ## Features
@@ -83,3 +84,4 @@ tox
 - **Remove empty cells**
 - **Remove trailing whitespace** (from end of lines *and* empty lines from ends
   of cells).
+- **Add `--help` message**
