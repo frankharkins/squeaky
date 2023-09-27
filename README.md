@@ -63,6 +63,11 @@ only be a problem if you `git add --patch` a notebook.
   horrendous diffs. Squeaky minifies SVG outputs to a single line, which also
   reduces file size.
 
+- **Remove empty cells**
+  
+  Squeaky removes empty cells, including that annoying empty code cell at the
+  bottom of every other notebook.
+
 
 ## Contributing
 
@@ -81,7 +86,6 @@ tox
 
 ## Wishlist
 
-- **Remove empty cells**
 - **Remove trailing whitespace** (from end of lines *and* empty lines from ends
   of cells).
 - **Add `--help` message**
