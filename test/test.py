@@ -9,6 +9,7 @@ from unittest.mock import patch
 from squeaky import clean_notebooks
 from squeaky.passes.metadata import clean_metadata
 from squeaky.passes.svg import clean_svgs
+from squeaky.passes.empty_cells import clean_empty_cells
 
 # set up
 def set_example_notebooks():
@@ -50,6 +51,17 @@ class TestPasses(unittest.TestCase):
         notebook, msg = clean_metadata(notebook)
         assert msg is None
 
+    def test_clean_empty_cells(self):
+        """
+        Check `clean_empty_cells` function
+        """
+        notebook, msg = clean_empty_cells(dirty_notebook)
+        assert msg is not None
+
+        notebook, msg = clean_empty_cells(notebook)
+        assert msg is None
+
+
 
 class TestCLI(unittest.TestCase):
     
@@ -64,14 +76,12 @@ class TestCLI(unittest.TestCase):
             assert nbformat.read(f, 4) == dirty_notebook
 
     @patch("sys.stdout", StringIO())
-    @patch("sys.argv", ["squeaky", str(dirty_tempfile_path), "--check"])
+    @patch("sys.argv", ["squeaky", str(dirty_tempfile_path)])
     def test_command_modifies(self):
-        with self.assertRaises(SystemExit) as context:
-            clean_notebooks()
-        assert context.exception.code == 2
+        clean_notebooks()
 
         with open(dirty_tempfile_path) as f:
-            assert nbformat.read(f, 4) == dirty_notebook
+            assert nbformat.read(f, 4) == clean_notebook
 
         set_example_notebooks()
 
