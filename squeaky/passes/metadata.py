@@ -17,4 +17,4 @@ def clean_metadata(notebook):
         return notebook, None
 
     notebook.metadata = CLEAN_METADATA
-    return notebook, "modified metadata"
+    return notebook, "modified notebook metadata"
