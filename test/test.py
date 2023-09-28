@@ -10,7 +10,7 @@ from squeaky import clean_notebooks
 from squeaky.passes.metadata import clean_metadata
 from squeaky.passes.svg import clean_svgs
 from squeaky.passes.empty_cells import clean_empty_cells
-
+from squeaky.passes.trailing_whitespace import clean_trailing_whitespace
 # set up
 def set_example_notebooks():
     with open(f"test/example-notebooks/clean.ipynb") as f:
@@ -61,6 +61,15 @@ class TestPasses(unittest.TestCase):
         notebook, msg = clean_empty_cells(notebook)
         assert msg is None
 
+    def test_clean_trailing_whitespace(self):
+        """
+        Check `clean_trailing_whitespace` function
+        """
+        notebook, msg = clean_trailing_whitespace(dirty_notebook)
+        assert msg is not None
+
+        notebook, msg = clean_trailing_whitespace(notebook)
+        assert msg is None
 
 
 class TestCLI(unittest.TestCase):

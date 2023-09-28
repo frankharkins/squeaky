@@ -5,6 +5,7 @@ import subprocess
 from .passes.metadata import clean_metadata
 from .passes.svg import clean_svgs
 from .passes.empty_cells import clean_empty_cells
+from .passes.trailing_whitespace import clean_trailing_whitespace
 from .tools import parse_args
 
 
@@ -23,7 +24,12 @@ def clean_notebooks():
         notebook = nbformat.read(path, 4)
         passed = True
 
-        for fn in [clean_metadata, clean_svgs, clean_empty_cells]:
+        for fn in [
+            clean_metadata,
+            clean_svgs,
+            clean_empty_cells,
+            clean_trailing_whitespace,
+        ]:
             notebook, msg = fn(notebook)
             if msg is not None:
                 if check:

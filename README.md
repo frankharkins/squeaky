@@ -63,6 +63,12 @@ only be a problem if you `git add --patch` a notebook.
   horrendous diffs. Squeaky minifies SVG outputs to a single line, which also
   reduces file size.
 
+- **Remove trailing whitespace**
+
+  Often missed in markdown (but not in version control), Squeaky removes
+  trailing whitespace from ends of lines *and* empty lines from ends and
+  beginnings of cells.
+
 - **Remove empty cells**
   
   Squeaky removes empty cells, including that annoying empty code cell at the
@@ -86,6 +92,5 @@ tox
 
 ## Wishlist
 
-- **Remove trailing whitespace** (from end of lines *and* empty lines from ends
-  of cells).
 - **Add `--help` message**
+- **Turn off features through config file**
