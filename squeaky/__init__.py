@@ -27,8 +27,8 @@ def clean_notebooks():
         for fn in [
             clean_metadata,
             clean_svgs,
-            clean_empty_cells,
             clean_trailing_whitespace,
+            clean_empty_cells,
         ]:
             notebook, msg = fn(notebook)
             if msg is not None:
