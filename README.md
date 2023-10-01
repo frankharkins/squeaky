@@ -29,6 +29,32 @@ To check notebooks without modifying them, use the `--check` flag.
 squeaky path/to/notebook.ipynb --check
 ```
 
+### Jupyter pre-save hook
+
+You can automatically run your notebooks through Squeaky before saving them by
+editing your Jupyter config file. First, find the location of your config
+directory by running
+
+```sh
+jupyter --config-dir
+```
+
+Your config directory may contain either a `jupyter_lab_config.py` or a
+`jupyter_server_config.py` (if neither exists, create an empty file with either
+of these names).
+
+> :warning: If you're using Jupyter notebook < 7, then the file will be called
+> `jupyter_notebook_config.py`.
+
+Then, add the following lines to that config file.
+
+```python
+from squeaky import squeaky_clean_hook
+c.FileContentsManager.pre_save_hook = squeaky_clean_hook
+```
+
+### Pre-commit hook
+
 To use with [pre-commit](https://pre-commit.com/), add the following to your
 `.pre-commit-config.yaml`.
 
@@ -42,12 +68,6 @@ repos:
         language: python
         files: '(.*?).ipynb$'
 ```
-
-**Experimental:** To automatically fix problems on commit, replace `--check`
-with `--git-add`, but beware this can sometimes fail when committing notebooks
-with unstaged changes and create a merge conflict (ironic, I know). This should
-only be a problem if you `git add --patch` a notebook.
-
 
 ## Features
 
