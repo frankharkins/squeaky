@@ -4,6 +4,7 @@ import subprocess
 
 from .passes.metadata import clean_metadata
 from .passes.svg import clean_svgs
+from .passes.svg_id import clean_svg_ids
 from .passes.empty_cells import clean_empty_cells
 from .passes.trailing_whitespace import clean_trailing_whitespace
 from .tools import parse_args
@@ -27,6 +28,7 @@ def clean_notebooks():
         for fn in [
             clean_metadata,
             clean_svgs,
+            clean_svg_ids,
             clean_trailing_whitespace,
             clean_empty_cells,
         ]:

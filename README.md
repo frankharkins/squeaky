@@ -63,6 +63,13 @@ only be a problem if you `git add --patch` a notebook.
   horrendous diffs. Squeaky minifies SVG outputs to a single line, which also
   reduces file size.
 
+- **Reset IDs in SVG outputs**
+
+  SVG outputs have another problem: Randomized IDs in the source. Squeaky
+  re-generates these IDs deterministically using on the cell's unique ID. This
+  means re-running the notebook won't change the output unless the image
+  actually changes.
+
 - **Remove trailing whitespace**
 
   Often missed in markdown (but not in version control), Squeaky removes

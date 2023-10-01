@@ -9,8 +9,10 @@ from unittest.mock import patch
 from squeaky import clean_notebooks
 from squeaky.passes.metadata import clean_metadata
 from squeaky.passes.svg import clean_svgs
+from squeaky.passes.svg_id import clean_svg_ids
 from squeaky.passes.empty_cells import clean_empty_cells
 from squeaky.passes.trailing_whitespace import clean_trailing_whitespace
+
 # set up
 def set_example_notebooks():
     with open(f"test/example-notebooks/clean.ipynb") as f:
@@ -39,6 +41,13 @@ class TestPasses(unittest.TestCase):
         assert msg is not None
 
         notebook, msg = clean_svgs(notebook)
+        assert msg is None
+
+    def test_clean_svg_ids(self):
+        notebook, msg = clean_svg_ids(dirty_notebook)
+        assert msg is not None
+
+        notebook, msg = clean_svg_ids(notebook)
         assert msg is None
 
     def test_clean_metadata(self):
