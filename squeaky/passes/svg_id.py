@@ -6,7 +6,8 @@ def generate_ids(cell):
     while True:
         yield md5(
             (cell.id + str(n)).encode("utf-8")
-        ).hexdigest()
+            ).hexdigest()[:11]
+        n += 1
 
 def clean_svg_ids(notebook):
     """
