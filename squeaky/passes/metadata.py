@@ -13,8 +13,9 @@ CLEAN_METADATA = {
 
 
 def clean_metadata(notebook):
-    if notebook.metadata == CLEAN_METADATA:
-        return notebook, None
-
-    notebook.metadata = CLEAN_METADATA
-    return notebook, "modified notebook metadata"
+    message = None
+    for key, value in CLEAN_METADATA.items():
+        if notebook.metadata[key] != value:
+            message = "modified notebook metadata"
+            notebook.metadata[key] = value
+    return notebook, message
