@@ -101,6 +101,10 @@ repos:
   Squeaky removes empty cells, including that annoying empty code cell at the
   bottom of every other notebook.
 
+- **Add missing cell IDs**
+
+  Cells without IDs now raise a warning in `nbformat`. Squeaky adds these IDs
+  for you so you don't need to think about it.
 
 ## Contributing
 

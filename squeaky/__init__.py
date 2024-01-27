@@ -2,6 +2,7 @@ import sys
 import nbformat
 import subprocess
 
+from .passes.cell_ids import add_missing_cell_ids
 from .passes.metadata import clean_metadata
 from .passes.svg import clean_svgs
 from .passes.svg_id import clean_svg_ids
@@ -13,6 +14,7 @@ from .tools import parse_args
 def clean_notebook(notebook, check=False):
     modified = False
     for fn in [
+        add_missing_cell_ids,
         clean_metadata,
         clean_svgs,
         clean_svg_ids,
