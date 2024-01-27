@@ -19,7 +19,6 @@ def clean_svg_ids(notebook):
         if cell.cell_type != "code":
             continue
 
-        new_ids = generate_ids(cell)
         for output in cell.outputs:
             if "data" not in output:
                 continue
@@ -36,16 +35,13 @@ def clean_svg_ids(notebook):
                 continue
 
             new_svg = svg
-            for existing_id in existing_ids:
-                new_svg = new_svg.replace(
-                        existing_id,
-                        new_ids.__next__()
-                )
+            for existing_id, new_id in zip(existing_ids, generate_ids(cell)):
+                new_svg = new_svg.replace(existing_id, new_id)
             if new_svg != svg:
                 modified = True
 
             output["data"]["image/svg+xml"] = new_svg
 
     if modified:
-        return notebook, "SVG IDs"
+        return notebook, "un-normalized SVG IDs"
     return notebook, None

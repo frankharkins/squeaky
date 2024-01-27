@@ -47,7 +47,7 @@ def squeaky_clean_hook(model, **_):
 
 def squeaky_cli():
     """
-    To run from the command line 
+    To run from the command line
     """
     switches, filepaths = parse_args(sys.argv)
     check = "--check" in switches
@@ -64,7 +64,7 @@ def squeaky_cli():
             nbformat.write(cleaned_notebook, path)
 
     if num_unclean > 0:
-        print("━"*35)
+        print("━" * 35)
         if check:
             print(
                 f"Problems in {num_unclean} notebook"
@@ -73,5 +73,5 @@ def squeaky_cli():
             )
             sys.exit(2)
         print(f"Modified {num_unclean} notebook{'s' if num_unclean != 1 else ''}")
-        print("━"*35)
+        print("━" * 35)
     print("✨ All clean ✨")

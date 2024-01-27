@@ -8,11 +8,7 @@ from unittest.mock import patch
 
 from squeaky import squeaky_cli
 from squeaky import clean_notebook as clean_notebook_fn
-from squeaky.passes.metadata import clean_metadata
-from squeaky.passes.svg import clean_svgs
-from squeaky.passes.svg_id import clean_svg_ids
-from squeaky.passes.empty_cells import clean_empty_cells
-from squeaky.passes.trailing_whitespace import clean_trailing_whitespace
+
 
 # set up
 class ExampleNotebooks:
@@ -61,7 +57,6 @@ class TestCLI(unittest.TestCase):
                 examples.clean_notebook
             )
         examples.reset()
-
 
 
 if __name__ == "__main__":
