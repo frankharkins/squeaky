@@ -1,24 +1,21 @@
 [build-system]
-requires = ["hatchling"]
+requires = [ "hatchling",]
 build-backend = "hatchling.build"
 
 [project]
 name = "squeaky"
 version = "0.3.1"
-authors = [
-  { name="Frank Harkins", email="frankharkins@hotmail.co.uk" },
-]
 description = "Remove noise from notebooks for cleaner version control diffs"
 readme = "README.md"
 requires-python = ">=3.7"
 license = "Apache-2.0"
-dependencies = [
-  "nbformat",
-  "scour",
-]
+dependencies = [ "nbformat", "scour",]
+[[project.authors]]
+name = "Frank Harkins"
+email = "frankharkins@hotmail.co.uk"
 
 [project.urls]
-"Homepage" = "https://github.com/frankharkins/squeaky-nb"
+Homepage = "https://github.com/frankharkins/squeaky-nb"
 "Bug Tracker" = "https://github.com/frankharkins/squeaky-nb/issues"
 
 [project.scripts]
