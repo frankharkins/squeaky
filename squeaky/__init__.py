@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 import sys
 import nbformat
 import subprocess
@@ -11,8 +14,18 @@ from .passes.trailing_whitespace import clean_trailing_whitespace
 from .tools import parse_args
 
 
-def clean_notebook(notebook, check=False):
-    modified = False
+def clean_notebook(notebook: nbformat.NotebookNode) -> tuple[nbformat.NotebookNode, list[str]]:
+    """
+    Clean notebook using squeaky
+
+    Args:
+        notebook: The nbformat.NotebookNode to clean.
+
+    Returns:
+        notebook: The cleaned nbformat.NotebookNode.
+        problems: A list of problem descriptions (empty if no problems found).
+    """
+    problems = []
     for fn in [
         add_missing_cell_ids,
         clean_metadata,
@@ -22,14 +35,9 @@ def clean_notebook(notebook, check=False):
         clean_empty_cells,
     ]:
         notebook, msg = fn(notebook)
-        if msg is None:
-            continue
-        modified = True
-        if check:
-            print(f"❌ {msg.capitalize()}")
-        else:
-            print(f"✅ Fixed {msg}")
-    return notebook, modified
+        if msg is not None:
+            problems.append(msg)
+    return notebook, problems
 
 
 def squeaky_clean_hook(model, **_):
@@ -56,12 +64,15 @@ def squeaky_cli():
     for path in filepaths:
         print(f"\033[1m{path}\033[0m")
         notebook = nbformat.read(path, 4)
-        cleaned_notebook, modified = clean_notebook(notebook, check=check)
-        if not modified:
+        cleaned_notebook, problems = clean_notebook(notebook)
+        if problems == []:
             continue
         num_unclean += 1
-        if not check:
-            nbformat.write(cleaned_notebook, path)
+        if check:
+            [print(f"❌ {msg.capitalize()}") for msg in problems]
+            continue
+        [print(f"✅ Fixed {msg}") for msg in problems]
+        nbformat.write(cleaned_notebook, path)
 
     if num_unclean > 0:
         print("━" * 35)

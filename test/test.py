@@ -28,8 +28,8 @@ examples = ExampleNotebooks()
 
 class TestAPI(unittest.TestCase):
     def test_clean_notebooks(self):
-        new_notebook, modified = clean_notebook_fn(examples.dirty_notebook)
-        assert modified == True
+        new_notebook, problems = clean_notebook_fn(examples.dirty_notebook)
+        assert len(problems) == 5
         assert new_notebook == examples.clean_notebook
         examples.reset()
 
