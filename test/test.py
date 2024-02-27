@@ -40,7 +40,7 @@ class TestCLI(unittest.TestCase):
     def test_check_flag_does_not_modify(self):
         with self.assertRaises(SystemExit) as context:
             squeaky_cli()
-        self.assertEqual(context.exception.code, 2)
+        self.assertEqual(context.exception.code, 1)
         self.assertEqual(
             nbformat.read(examples.dirty_tempfile_path, 4),
             examples.dirty_notebook

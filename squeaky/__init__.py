@@ -84,7 +84,7 @@ def squeaky_cli():
                     f"{'s' if num_unclean != 1 else ''}; to fix, run"
                     "\n\n  squeaky path/to/notebook.ipynb\n"
                 )
-            sys.exit(2)
+            sys.exit(1)
         print(f"Modified {num_unclean} notebook{'s' if num_unclean != 1 else ''}")
         print("━" * 35)
     print("✨ All clean ✨")
