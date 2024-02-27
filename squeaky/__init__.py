@@ -59,6 +59,7 @@ def squeaky_cli():
     """
     switches, filepaths = parse_args(sys.argv)
     check = "--check" in switches
+    no_advice = "--no-advice" in switches
 
     num_unclean = 0
     for path in filepaths:
@@ -77,11 +78,12 @@ def squeaky_cli():
     if num_unclean > 0:
         print("━" * 35)
         if check:
-            print(
-                f"Problems in {num_unclean} notebook"
-                f"{'s' if num_unclean != 1 else ''}; to fix, run"
-                "\n\n  squeaky path/to/notebook.ipynb\n"
-            )
+            if not no_advice:
+                print(
+                    f"Problems in {num_unclean} notebook"
+                    f"{'s' if num_unclean != 1 else ''}; to fix, run"
+                    "\n\n  squeaky path/to/notebook.ipynb\n"
+                )
             sys.exit(2)
         print(f"Modified {num_unclean} notebook{'s' if num_unclean != 1 else ''}")
         print("━" * 35)

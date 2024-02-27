@@ -58,6 +58,20 @@ class TestCLI(unittest.TestCase):
             )
         examples.reset()
 
+    @patch("sys.stdout", new_callable=StringIO)
+    @patch(
+        "sys.argv",
+        ["squeaky", str(examples.dirty_tempfile_path), "--check", "--no-advice"],
+    )
+    def test_no_advice_flag_works(self, mock_stdout):
+        with self.assertRaises(SystemExit) as context:
+            squeaky_cli()
+        self.assertEqual(
+            mock_stdout.getvalue().strip().split("\n")[-1],
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+        )
+        examples.reset()
+
 
 if __name__ == "__main__":
     unittest.main(buffer=True)
