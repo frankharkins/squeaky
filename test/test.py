@@ -1,4 +1,5 @@
 import unittest
+from pyfakefs.fake_filesystem_unittest import TestCase as FsTestCase
 import tempfile
 from pathlib import Path
 import nbformat
@@ -8,6 +9,7 @@ from unittest.mock import patch
 
 from squeaky import squeaky_cli
 from squeaky import clean_notebook as clean_notebook_fn
+from squeaky.tools import parse_args
 
 
 # set up
@@ -72,6 +74,25 @@ class TestCLI(unittest.TestCase):
         )
         examples.reset()
 
+class TestCLIPaths(FsTestCase):
+    def setUp(self):
+        self.setUpPyfakefs()
+        self.fs.create_dir("examples")
+        self.fs.create_dir("examples/.ipynb_checkpoints")
+        self.fs.create_dir("other")
+        for path in [
+            "my_notebook.ipynb",
+            ".my_hidden_notebook.ipynb",
+            "examples/another_notebook.ipynb",
+            "examples/.ipynb_checkpoints/hidden_notebook.ipynb",
+            "examples/not-a-notebook.yml"
+        ]:
+            self.fs.create_file(path)
+
+    def test_recurse_directories(self):
+        _, paths_iter = parse_args(["squeaky", "my_notebook.ipynb", "examples/"])
+        paths = set(map(str, paths_iter))
+        self.assertEqual(paths, { "my_notebook.ipynb", "examples/another_notebook.ipynb" })
 
 if __name__ == "__main__":
     unittest.main(buffer=True)

@@ -1,4 +1,6 @@
 import sys
+from typing import Iterable
+from itertools import chain
 from pathlib import Path
 
 
@@ -19,17 +21,20 @@ def parse_args(argv):
     filepaths = []
     for a in argv:
         if a not in switches:
-            filepaths.append(a)
+            path = Path(a)
+            filepaths.append(path)
 
-    # Make all paths of form ./notebook_root/folder/notebook.ipynb
-    for idx, path in enumerate(filepaths):
-        path = Path(path)
-        if path.suffix == "":
-            path = path.with_suffix(".ipynb")
+    return switches, _recurse_directory_paths(filepaths)
 
-        if not path.exists():
-            path = Path(NB_ROOT) / path
+def _recurse_directory_paths(paths: list[Path]) -> Iterable:
+    """
+    Return iterator that includes all files in paths plus any notebooks inside directories.
+    """
+    def is_not_hidden(path: Path):
+        return not any(part.startswith(".") for part in path.parts)
 
-        filepaths[idx] = path
+    non_dirs = filter(lambda f: f.is_file(), paths)
+    dirs = filter(lambda f: not f.is_file(), paths)
+    recursed_dirs = [filter(is_not_hidden, p.rglob("**/*.ipynb")) for p in dirs]
 
-    return switches, filepaths
+    return chain(non_dirs, *recursed_dirs)
