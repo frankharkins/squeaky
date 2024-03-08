@@ -94,6 +94,16 @@ class TestCLIPaths(FsTestCase):
         paths = set(map(str, paths_iter))
         self.assertEqual(paths, { "my_notebook.ipynb", "examples/another_notebook.ipynb" })
 
+    @patch("sys.stdout", new_callable=StringIO)
+    @patch("sys.argv", ["squeaky", "invalid.ipynb", "unvalid.ipynb"])
+    def test_missing_files_message(self, mock_stdout):
+        with self.assertRaises(SystemExit) as context:
+            squeaky_cli()
+        self.assertEqual(
+            mock_stdout.getvalue().strip(),
+            "\033[91mERROR: Could not find the following files:\n  invalid.ipynb\n  unvalid.ipynb\033[0m"
+        )
+
 if __name__ == "__main__":
     unittest.main(buffer=True)
     os.remove(clean_tempfile_path)

@@ -24,6 +24,7 @@ def parse_args(argv):
             path = Path(a)
             filepaths.append(path)
 
+    _check_for_non_existent_files(filepaths)
     return switches, _recurse_directory_paths(filepaths)
 
 def _recurse_directory_paths(paths: list[Path]) -> Iterable:
@@ -38,3 +39,16 @@ def _recurse_directory_paths(paths: list[Path]) -> Iterable:
     recursed_dirs = [filter(is_not_hidden, p.rglob("**/*.ipynb")) for p in dirs]
 
     return chain(non_dirs, *recursed_dirs)
+
+def _check_for_non_existent_files(paths: list[Path]) -> None:
+    non_existant_files = list(filter(lambda f: not f.exists(), paths))
+    if non_existant_files == []:
+        return
+    plural = len(non_existant_files) > 1
+    print(
+        "\033[91m"
+        + f"ERROR: Could not find the following file{ 's' if plural else '' }:\n  "
+        + "\n  ".join(map(str, non_existant_files))
+        + "\033[0m"
+    )
+    sys.exit(1)
