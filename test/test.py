@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 from squeaky import squeaky_cli
 from squeaky import clean_notebook as clean_notebook_fn
-from squeaky.tools import parse_args
+from squeaky.tools import get_inputs
 
 
 # set up
@@ -89,9 +89,10 @@ class TestCLIPaths(FsTestCase):
         ]:
             self.fs.create_file(path)
 
+    @patch("sys.argv", ["squeaky", "my_notebook.ipynb", "examples/"])
     def test_recurse_directories(self):
-        _, paths_iter = parse_args(["squeaky", "my_notebook.ipynb", "examples/"])
-        paths = set(map(str, paths_iter))
+        inputs = get_inputs()
+        paths = set(map(str, inputs.filepaths))
         self.assertEqual(paths, { "my_notebook.ipynb", "examples/another_notebook.ipynb" })
 
     @patch("sys.stdout", new_callable=StringIO)

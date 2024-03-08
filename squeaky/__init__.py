@@ -11,7 +11,7 @@ from .passes.svg import clean_svgs
 from .passes.svg_id import clean_svg_ids
 from .passes.empty_cells import clean_empty_cells
 from .passes.trailing_whitespace import clean_trailing_whitespace
-from .tools import parse_args
+from .tools import get_inputs
 
 
 def clean_notebook(notebook: nbformat.NotebookNode) -> tuple[nbformat.NotebookNode, list[str]]:
@@ -57,19 +57,17 @@ def squeaky_cli():
     """
     To run from the command line
     """
-    switches, filepaths = parse_args(sys.argv)
-    check = "--check" in switches
-    no_advice = "--no-advice" in switches
+    inputs = get_inputs()
 
     num_unclean = 0
-    for path in filepaths:
+    for path in inputs.filepaths:
         print(f"\033[1m{path}\033[0m")
         notebook = nbformat.read(path, 4)
         cleaned_notebook, problems = clean_notebook(notebook)
         if problems == []:
             continue
         num_unclean += 1
-        if check:
+        if inputs.check:
             [print(f"❌ {msg.capitalize()}") for msg in problems]
             continue
         [print(f"✅ Fixed {msg}") for msg in problems]
@@ -77,8 +75,8 @@ def squeaky_cli():
 
     if num_unclean > 0:
         print("━" * 35)
-        if check:
-            if not no_advice:
+        if inputs.check:
+            if not inputs.no_advice:
                 print(
                     f"Problems in {num_unclean} notebook"
                     f"{'s' if num_unclean != 1 else ''}; to fix, run"

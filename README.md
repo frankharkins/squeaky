@@ -123,5 +123,4 @@ tox
 
 ## Wishlist
 
-- **Add `--help` message**
 - **Turn off features through config file**

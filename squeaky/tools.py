@@ -1,31 +1,36 @@
 import sys
+import argparse
 from typing import Iterable
 from itertools import chain
 from pathlib import Path
 
+def _make_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="squeaky",
+        description="✨ Make your Jupyter notebooks squeaky clean ✨",
+        epilog="Complain at https://github.com/frankharkins/squeaky/issues"
+    )
+    parser.add_argument("filepaths", nargs="+", type=Path)
+    parser.add_argument("--check", action="store_true", dest="check",
+        help="do not fix notebooks, just print message and return non-zero exit code if notebooks need linting"
+    )
+    parser.add_argument("--no-advice", action="store_true", dest="no_advice",
+        help="do not explain how to fix (helpful if contributors should use squeaky through a custom linting workflow)"
+    )
+    return parser
 
-def parse_args(argv):
-    """Parses sys.argv to find notebook paths and switches
+def get_inputs() -> argparse.Namespace:
+    """
+    Parses sys.argv to find notebook paths and switches
 
     Returns a tuple with:
-        - A set of switches (arguments starting with '--')
         - A list of filepaths
+        - An argparse.Namespace for the switches
     """
-    argv = argv[1:] if len(argv) > 1 else []
-
-    switches = set()
-    for a in argv:
-        if a.startswith("--"):
-            switches.add(a)
-
-    filepaths = []
-    for a in argv:
-        if a not in switches:
-            path = Path(a)
-            filepaths.append(path)
-
-    _check_for_non_existent_files(filepaths)
-    return switches, _recurse_directory_paths(filepaths)
+    inputs = _make_parser().parse_args()
+    _check_for_non_existent_files(inputs.filepaths)
+    inputs.filepaths = _recurse_directory_paths(inputs.filepaths)
+    return inputs
 
 def _recurse_directory_paths(paths: list[Path]) -> Iterable:
     """
