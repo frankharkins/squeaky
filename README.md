@@ -29,21 +29,6 @@ To check notebooks without modifying them, use the `--check` flag.
 squeaky path/to/notebook.ipynb --check
 ```
 
-### VSCode format on save
-
-To automatically clean your notebooks on save, install Squeaky then add the
-following to your `.vscode/settings.json`.
-
-```json
-{
-  // Other settings here
-  "[notebook]": {
-    "editor.defaultFormatter": "squeaky",
-    "editor.formatOnSave": true
-  }
-}
-```
-
 ### Jupyter pre-save hook
 
 You can automatically run your notebooks through Squeaky before saving them by
