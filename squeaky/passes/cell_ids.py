@@ -6,6 +6,6 @@ def add_missing_cell_ids(notebook):
     for cell in notebook.cells:
         if hasattr(cell, "id"):
             continue
-        cell.id = str(uuid.uuid4())
+        cell.id = str(uuid.uuid4().hex[:8])
         message = "missing cell IDs"
     return notebook, message
