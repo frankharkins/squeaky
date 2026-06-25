@@ -30,6 +30,11 @@ class ExampleNotebooks:
         self.no_metadata_tempfile_path = Path(tempfile.gettempdir(), "squeaky-unittest-no-metadata.ipynb")
         nbformat.write(self.no_metadata, self.no_metadata_tempfile_path)
 
+        self.julia_notebook = nbformat.read("test/example-notebooks/julia.ipynb", 4)
+        self.julia_tempfile_path = Path(tempfile.gettempdir(), "squeaky-unittest-julia.ipynb")
+        nbformat.write(self.julia_notebook, self.julia_tempfile_path)
+
+
 examples = ExampleNotebooks()
 
 class TestAPI(unittest.TestCase):
@@ -42,6 +47,11 @@ class TestAPI(unittest.TestCase):
     def test_no_metadata(self):
         new_notebook, problems = clean_notebook_fn(examples.no_metadata)
         assert len(problems) == 1
+        examples.reset()
+
+    def test_julia_notebook(self):
+        new_notebook, problems = clean_notebook_fn(examples.julia_notebook)
+        assert len(problems) == 0
         examples.reset()
 
 

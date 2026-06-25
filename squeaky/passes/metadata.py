@@ -1,4 +1,4 @@
-CLEAN_METADATA = {
+CLEAN_PYTHON_METADATA = {
     "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
     "language_info": {
         "codemirror_mode": {"name": "ipython", "version": 3},
@@ -11,10 +11,19 @@ CLEAN_METADATA = {
     },
 }
 
+def _is_python_notebook(notebook):
+    language = notebook.metadata.get("kernelspec", {}).get("language", None)
+    # Unspecified languages are assumed to be python
+    return language is None or language == "python"
+
 
 def clean_metadata(notebook):
     message = None
-    for key, value in CLEAN_METADATA.items():
+    if not _is_python_notebook(notebook):
+        # We don't mess with non-python metadata
+        return notebook, message
+
+    for key, value in CLEAN_PYTHON_METADATA.items():
         if notebook.metadata.get(key, None) != value:
             message = "modified notebook metadata"
             notebook.metadata[key] = value
