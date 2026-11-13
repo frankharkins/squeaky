@@ -29,6 +29,13 @@ To check notebooks without modifying them, use the `--check` flag.
 squeaky path/to/notebook.ipynb --check
 ```
 
+Squeaky only prints the notebooks that need cleaning. To print every notebook
+it checks, use the `--verbose` flag.
+
+```sh
+squeaky path/to/notebooks/ --check --verbose
+```
+
 ### Jupyter pre-save hook
 
 You can automatically run your notebooks through Squeaky before saving them by

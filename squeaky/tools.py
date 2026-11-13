@@ -17,6 +17,9 @@ def _make_parser() -> argparse.ArgumentParser:
     parser.add_argument("--no-advice", action="store_true", dest="no_advice",
         help="do not explain how to fix (helpful if contributors should use squeaky through a custom linting workflow)"
     )
+    parser.add_argument("--verbose", action="store_true", dest="verbose",
+        help="print every notebook checked, not only the ones that need cleaning"
+    )
     return parser
 
 def get_inputs() -> argparse.Namespace:
