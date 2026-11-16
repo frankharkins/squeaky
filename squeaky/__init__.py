@@ -53,6 +53,16 @@ def squeaky_clean_hook(model, **_):
     )
 
 
+def _read_notebook(path) -> nbformat.NotebookNode:
+    """
+    Read a notebook without validating it. For nbformat 4.5+ notebooks,
+    `nbformat.read` silently adds any missing cell IDs during validation (and
+    only warns), which would hide them from `add_missing_cell_ids`.
+    """
+    with open(path, encoding="utf-8") as f:
+        return nbformat.convert(nbformat.reader.reads(f.read()), 4)
+
+
 def squeaky_cli():
     """
     To run from the command line
@@ -61,11 +71,14 @@ def squeaky_cli():
 
     num_unclean = 0
     for path in inputs.filepaths:
-        print(f"\033[1m{path}\033[0m")
-        notebook = nbformat.read(path, 4)
+        if inputs.verbose:
+            print(f"\033[1m{path}\033[0m")
+        notebook = _read_notebook(path)
         cleaned_notebook, problems = clean_notebook(notebook)
         if problems == []:
             continue
+        if not inputs.verbose:
+            print(f"\033[1m{path}\033[0m")
         num_unclean += 1
         if inputs.check:
             [print(f"❌ {msg.capitalize()}") for msg in problems]

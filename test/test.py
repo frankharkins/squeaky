@@ -1,3 +1,4 @@
+import json
 import unittest
 from pyfakefs.fake_filesystem_unittest import TestCase as FsTestCase
 import tempfile
@@ -92,6 +93,91 @@ class TestCLI(unittest.TestCase):
             "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
         )
         examples.reset()
+
+    @patch("sys.stdout", new_callable=StringIO)
+    @patch(
+        "sys.argv",
+        [
+            "squeaky",
+            str(examples.clean_tempfile_path),
+            str(examples.dirty_tempfile_path),
+            "--check",
+        ],
+    )
+    def test_only_prints_unclean_notebooks(self, mock_stdout):
+        with self.assertRaises(SystemExit) as context:
+            squeaky_cli()
+        self.assertEqual(context.exception.code, 1)
+        output = mock_stdout.getvalue()
+        self.assertIn(str(examples.dirty_tempfile_path), output)
+        self.assertNotIn(str(examples.clean_tempfile_path), output)
+        examples.reset()
+
+    @patch("sys.stdout", new_callable=StringIO)
+    @patch("sys.argv", ["squeaky", str(examples.clean_tempfile_path), "--check"])
+    def test_clean_notebooks_only_print_summary(self, mock_stdout):
+        squeaky_cli()
+        self.assertEqual(mock_stdout.getvalue().strip(), "✨ All clean ✨")
+        examples.reset()
+
+    @patch("sys.stdout", new_callable=StringIO)
+    @patch(
+        "sys.argv",
+        [
+            "squeaky",
+            str(examples.clean_tempfile_path),
+            str(examples.dirty_tempfile_path),
+            "--check",
+            "--verbose",
+        ],
+    )
+    def test_verbose_flag_prints_every_notebook(self, mock_stdout):
+        with self.assertRaises(SystemExit):
+            squeaky_cli()
+        output = mock_stdout.getvalue()
+        self.assertIn(str(examples.clean_tempfile_path), output)
+        self.assertIn(str(examples.dirty_tempfile_path), output)
+        examples.reset()
+
+
+class TestCLIMissingCellIds(unittest.TestCase):
+    """
+    nbformat 4.5+ requires cell IDs. `nbformat.read` silently adds missing IDs,
+    so the CLI must read notebooks without validating them to catch this.
+    """
+
+    def setUp(self):
+        self.path = Path(tempfile.gettempdir(), "squeaky-unittest-missing-ids.ipynb")
+        self.path.write_text(
+            json.dumps(
+                {
+                    "cells": [{"cell_type": "markdown", "metadata": {}, "source": ["# Title"]}],
+                    "metadata": examples.clean_notebook.metadata,
+                    "nbformat": 4,
+                    "nbformat_minor": 5,
+                }
+            )
+        )
+
+    def tearDown(self):
+        self.path.unlink()
+
+    def test_check_finds_missing_ids(self):
+        with patch("sys.argv", ["squeaky", str(self.path), "--check"]), patch(
+            "sys.stdout", new_callable=StringIO
+        ) as mock_stdout:
+            with self.assertRaises(SystemExit) as context:
+                squeaky_cli()
+        self.assertEqual(context.exception.code, 1)
+        self.assertIn("Missing cell ids", mock_stdout.getvalue())
+
+    @patch("sys.stdout", StringIO())
+    def test_command_adds_missing_ids(self):
+        with patch("sys.argv", ["squeaky", str(self.path)]):
+            squeaky_cli()
+        cells = json.loads(self.path.read_text())["cells"]
+        self.assertTrue(all("id" in cell for cell in cells))
+
 
 class TestCLIPaths(FsTestCase):
     def setUp(self):
